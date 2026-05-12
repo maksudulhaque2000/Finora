@@ -1,38 +1,39 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft, Menu } from 'lucide-react';
 import { navigationItems } from '@/components/layout/navigation';
 import { useUiStore } from '@/store/ui';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import QuickLink from '@/components/ui/quick-link';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { sidebarOpen, toggleSidebar } = useUiStore();
 
   return (
-    <aside className={cn('sticky top-0 hidden h-screen shrink-0 border-r border-white/10 bg-black/25 backdrop-blur-xl lg:flex lg:flex-col', sidebarOpen ? 'w-72' : 'w-20')}>
+    <aside
+      className={cn(
+        'sticky top-0 hidden h-screen shrink-0 border-r border-white/10 bg-black/25 backdrop-blur-xl lg:flex lg:flex-col',
+        sidebarOpen ? 'w-72' : 'w-20'
+      )}
+    >
       <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-5">
-        {sidebarOpen ? (
-          <div>
-            <p className="font-display text-2xl text-gold">Finora</p>
-            <p className="text-xs uppercase tracking-[0.22em] text-white/40">Finance + Aura</p>
-          </div>
-        ) : (
-          <div className="font-display text-2xl text-gold">F</div>
-        )}
-        <Button variant="ghost" className="h-10 w-10 rounded-full p-0" onClick={toggleSidebar} aria-label="Toggle sidebar">
-          {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        <div className="flex items-center gap-3">
+          <Menu className="h-5 w-5 text-white/80" />
+          {sidebarOpen ? <span className="font-display text-lg text-gold">Finora</span> : <span className="sr-only">Finora</span>}
+        </div>
+        <Button variant="ghost" onClick={toggleSidebar} className="rounded-full p-2">
+          <ChevronLeft className={cn('h-4 w-4 transition', sidebarOpen ? 'rotate-0' : 'rotate-180')} />
         </Button>
       </div>
 
-      <nav className="flex-1 space-y-2 px-3 py-5">
+      <nav className="flex flex-1 flex-col gap-1 p-4">
         {navigationItems.map((item) => {
           const active = pathname === item.href;
           return (
-            <Link
+            <QuickLink
               key={item.href}
               href={item.href}
               className={cn(
@@ -42,7 +43,7 @@ export function Sidebar() {
             >
               <item.icon className="h-4 w-4" />
               {sidebarOpen ? <span className="font-medium">{item.label}</span> : null}
-            </Link>
+            </QuickLink>
           );
         })}
       </nav>

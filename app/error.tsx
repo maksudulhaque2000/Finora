@@ -1,7 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+// Link removed; using quick navigate anchor
 import { Button } from '@/components/ui/button';
+import QuickLink from '@/components/ui/quick-link';
 
 export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
@@ -17,7 +18,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
             Try again
           </Button>
           <Button asChild variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
-            <Link href="/dashboard">Go to dashboard</Link>
+            <QuickLink href="/dashboard">Go to dashboard</QuickLink>
           </Button>
         </div>
       </div>

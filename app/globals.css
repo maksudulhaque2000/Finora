@@ -85,30 +85,7 @@ body {
   background-size: 400% 100%;
 }
 
-/* Light theme overrides when html has .light */
-html.light body {
-  background: linear-gradient(180deg, #fbfbfd 0%, #f5f7fb 100%);
-  color: hsl(222 14% 12%);
-}
-
-html.light .glass-panel {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(13, 18, 26, 0.06);
-  color: #0b1220;
-}
-
-html.light .text-white {
-  color: #0b1220;
-}
-html.light .text-white\/60 {
-  color: rgba(11, 18, 32, 0.6);
-}
-html.light .text-white\/45 {
-  color: rgba(11, 18, 32, 0.45);
-}
-html.light .bg-gold {
-  background-color: #d4a853;
-}
+/* Keep a single dark theme (no light-mode overrides). */
 
 /* Select and option styling to improve contrast in both themes. */
 select {

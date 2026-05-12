@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import QuickLink from '@/components/ui/quick-link';
 import { ArrowRight, ShieldCheck, Sparkles, LineChart, WalletCards } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
@@ -34,7 +35,7 @@ export default function HomePage() {
                 <>
                   <span className="hidden text-sm text-white/75 sm:inline">{session?.user?.name ?? session?.user?.email}</span>
                   <Button asChild className="bg-gold text-black hover:bg-gold-light">
-                    <Link href="/dashboard">Go to dashboard</Link>
+                    <QuickLink href="/dashboard">Go to dashboard</QuickLink>
                   </Button>
                   <Button variant="outline" onClick={() => signOut({ callbackUrl: '/login' })}>
                     Sign out
@@ -72,10 +73,10 @@ export default function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Button asChild size="lg" className="bg-gold text-black hover:bg-gold-light">
-                  <Link href="/dashboard">
+                  <QuickLink href="/dashboard">
                     Open dashboard
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </QuickLink>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
                   <Link href="/reports">Explore reports</Link>
