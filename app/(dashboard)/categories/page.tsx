@@ -1,5 +1,6 @@
 import { Shapes, Plus } from 'lucide-react';
 import { PageShell } from '@/components/page-shell';
+import AmountDynamic from '@/components/amount-dynamic';
 import { Button } from '@/components/ui/button';
 import { CategoryBadge } from '@/components/category-badge';
 
@@ -32,7 +33,9 @@ export default function CategoriesPage() {
                   <CategoryBadge name={category.name} color={category.color} />
                   <span className="text-sm text-white/50">{category.type}</span>
                 </div>
-                <span className="font-mono text-white">BDT {category.total.toLocaleString()}</span>
+                <span className="text-right block">
+                  <AmountDynamic value={category.total} baseRem={1.05} />
+                </span>
               </div>
             ))}
           </div>

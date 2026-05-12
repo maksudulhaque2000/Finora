@@ -17,9 +17,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     (async () => {
-      const providers = await getProviders();
-      const enabled = Object.values(providers ?? {}).filter((provider) => provider.id !== 'credentials');
-      setSocialProviders(enabled.map((provider) => ({ id: provider.id, name: provider.name })));
+      try {
+        const providers = await getProviders();
+        const enabled = Object.values(providers ?? {}).filter((provider) => provider.id !== 'credentials');
+        setSocialProviders(enabled.map((provider) => ({ id: provider.id, name: provider.name })));
+      } catch (err) {
+        // If providers fail to load (network/SSR issue), keep UI functional without social buttons
+        console.error('Failed to load auth providers', err);
+        setSocialProviders([]);
+      }
     })();
   }, []);
 
@@ -88,7 +94,14 @@ export default function LoginPage() {
                     type="button"
                     variant="outline"
                     className="w-full justify-center"
-                    onClick={() => signIn(provider.id, { callbackUrl: '/dashboard' })}
+                    onClick={async () => {
+                      try {
+                        await signIn(provider.id, { callbackUrl: '/dashboard' });
+                      } catch (err) {
+                        console.error('Social sign-in failed', err);
+                        setError('Social sign-in failed. Please try again.');
+                      }
+                    }}
                   >
                     {socialIcon(provider.id)}
                     {provider.name}

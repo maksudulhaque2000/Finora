@@ -64,17 +64,17 @@ export default function DashboardPage() {
         </>
       }
     >
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+        <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
           <FinancialCard title="Total income" amount={345000} trend="+12.2%" trendLabel="Current month" tone="positive" />
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <FinancialCard title="Total expenses" amount={175000} trend="+4.8%" trendLabel="Current month" tone="negative" />
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+        <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
           <FinancialCard title="Net balance" amount={170000} trend="+18.4%" trendLabel="Current month" tone="positive" />
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <FinancialCard title="Asset value" amount={1285400} trend="+6.1%" trendLabel="Latest snapshot" tone="neutral" />
         </motion.div>
       </div>

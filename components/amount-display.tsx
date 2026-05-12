@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { formatCurrency } from '@/lib/format';
+import AmountDynamic from '@/components/amount-dynamic';
 
-export function AmountDisplay({ amount, currency = 'BDT' }: { amount: number; currency?: string }) {
+export function AmountDisplay({ amount }: { amount: number }) {
   const [visibleAmount, setVisibleAmount] = useState(0);
 
   useEffect(() => {
@@ -11,5 +11,5 @@ export function AmountDisplay({ amount, currency = 'BDT' }: { amount: number; cu
     return () => window.clearTimeout(start);
   }, [amount]);
 
-  return <span className="font-mono tabular-nums">{formatCurrency(visibleAmount, currency)}</span>;
+  return <AmountDynamic value={visibleAmount} baseRem={1.1} />;
 }

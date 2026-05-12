@@ -9,7 +9,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "prisma:generate": "prisma generate",
-    "prisma:seed": "prisma db seed"
+    "prisma:seed": "prisma db seed",
+    "clean:next": "node -e \"try{require('fs').rmSync('.next',{ recursive:true, force:true }); console.log('removed .next')}catch(e){}\""
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

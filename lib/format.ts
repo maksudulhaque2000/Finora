@@ -5,7 +5,9 @@ export function formatCurrency(amount: number, currency = 'BDT', locale = 'en-US
     style: 'currency',
     currency,
     maximumFractionDigits: 2
-  }).format(amount);
+  })
+    .format(amount)
+    .replace(/\u00A0/g, ' ');
 }
 
 export function formatShortDate(date: string | Date) {

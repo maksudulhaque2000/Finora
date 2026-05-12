@@ -1,4 +1,5 @@
 import { Plus, ReceiptText } from 'lucide-react';
+import AmountDynamic from '@/components/amount-dynamic';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
 import { TransactionTable } from '@/components/transaction-table';
@@ -29,7 +30,7 @@ export default function ExpensesPage() {
         />
         <TransactionTable title="Expense entries" rows={expenseRows} />
       </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         <div className="glass-panel rounded-[24px] p-5">
           <ReceiptText className="h-5 w-5 text-crimson" />
           <p className="mt-4 text-sm text-white/60">Recurring expenses</p>
@@ -45,7 +46,9 @@ export default function ExpensesPage() {
         </div>
         <div className="glass-panel rounded-[24px] p-5">
           <p className="text-sm text-white/60">This month&apos;s spend</p>
-          <p className="mt-2 font-mono text-3xl text-white">BDT 21,300</p>
+          <p className="mt-2">
+            <AmountDynamic value={21300} baseRem={2.2} />
+          </p>
         </div>
       </div>
     </PageShell>

@@ -29,7 +29,22 @@ export function Topbar() {
               {session.user.name ?? session.user.email}
             </div>
           ) : null}
-          <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <Button
+            variant="outline"
+            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+            onClick={() => {
+              // toggle both next-themes and a html.light class for our simple fallback
+              const next = theme === 'dark' ? 'light' : 'dark';
+              setTheme(next);
+              try {
+                if (typeof document !== 'undefined') {
+                  document.documentElement.classList.toggle('light', next === 'light');
+                }
+              } catch {
+                // noop
+              }
+            }}
+          >
             {mounted ? (theme === 'dark' ? 'Dark' : 'Light') + ' mode' : 'Theme'}
           </Button>
           <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">

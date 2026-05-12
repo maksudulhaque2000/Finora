@@ -1,5 +1,6 @@
 import { Plus, ShieldAlert } from 'lucide-react';
 import { PageShell } from '@/components/page-shell';
+import AmountDynamic from '@/components/amount-dynamic';
 import { Button } from '@/components/ui/button';
 import { FinancialCard } from '@/components/financial-card';
 import { EmptyState } from '@/components/empty-state';
@@ -21,7 +22,7 @@ export default function LiabilitiesPage() {
         </Button>
       }
     >
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         <FinancialCard title="Total liabilities" amount={282000} trend="-2.4%" trendLabel="Latest snapshot" tone="negative" />
         <FinancialCard title="Monthly repayment" amount={22000} trendLabel="Scheduled" tone="neutral" />
         <FinancialCard title="Asset ratio" amount={82} trendLabel="Assets vs liabilities" tone="positive" />
@@ -44,11 +45,15 @@ export default function LiabilitiesPage() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-white/40">Balance</p>
-                    <p className="mt-1 font-mono text-white">BDT {liability.balance.toLocaleString()}</p>
+                    <p className="mt-1">
+                      <AmountDynamic value={liability.balance} baseRem={1.05} />
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-white/40">Installment</p>
-                    <p className="mt-1 font-mono text-white">BDT {liability.installment.toLocaleString()}</p>
+                    <p className="mt-1">
+                      <AmountDynamic value={liability.installment} baseRem={1.05} />
+                    </p>
                   </div>
                 </div>
               </div>

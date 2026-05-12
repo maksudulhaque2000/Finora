@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import AmountDynamic from '@/components/amount-dynamic';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
 import { FinancialCard } from '@/components/financial-card';
@@ -22,7 +23,7 @@ export default function AssetsPage() {
         </Button>
       }
     >
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         <FinancialCard title="Total asset value" amount={1285000} trend="+6.1%" trendLabel="Latest snapshot" tone="positive" />
         <FinancialCard title="Cash holdings" amount={65000} trend="+1.2%" trendLabel="Today" tone="neutral" />
         <FinancialCard title="Bank balance" amount={840000} trend="+9.4%" trendLabel="This month" tone="positive" />
@@ -39,7 +40,9 @@ export default function AssetsPage() {
                   <p className="text-white">{asset.name}</p>
                   <p className="mt-1 text-sm text-white/50">{asset.type}</p>
                 </div>
-                <p className="font-mono text-white">BDT {asset.value.toLocaleString()}</p>
+                      <div className="text-right">
+                        <AmountDynamic value={asset.value} baseRem={1.1} />
+                      </div>
               </div>
             ))}
           </div>
@@ -47,7 +50,7 @@ export default function AssetsPage() {
         <EmptyState
           title="Asset strategy"
           description="Capture ownership details, purchase dates, and depreciation notes to preserve financial context across reporting cycles."
-            iconName="Building2"
+          iconName="Building2"
           actionLabel="Add asset"
           actionHref="/dashboard/assets/new"
         />

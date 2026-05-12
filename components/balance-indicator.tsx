@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '@/lib/format';
+import AmountDynamic from '@/components/amount-dynamic';
 
-export function BalanceIndicator({ balance, currency = 'BDT' }: { balance: number; currency?: string }) {
+export function BalanceIndicator({ balance }: { balance: number }) {
   const isPositive = balance >= 0;
   return (
-    <span className={cn('font-mono text-sm font-semibold', isPositive ? 'text-emerald' : 'text-crimson')}>
-      {formatCurrency(balance, currency)}
+    <span className={cn('inline-flex items-center whitespace-nowrap text-sm font-semibold', isPositive ? 'text-emerald' : 'text-crimson')}>
+      <AmountDynamic value={balance} baseRem={1} />
     </span>
   );
 }
