@@ -13,6 +13,7 @@ const authConfig: NextAuthConfig = {
   pages: {
     signIn: '/login'
   },
+  trustHost: true,
   providers: [
     Credentials({
       name: 'Credentials',
@@ -51,7 +52,8 @@ const authConfig: NextAuthConfig = {
       ? [
           Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            allowDangerousEmailAccountLinking: true
           })
         ]
       : []),
@@ -59,7 +61,8 @@ const authConfig: NextAuthConfig = {
       ? [
           Facebook({
             clientId: process.env.FACEBOOK_CLIENT_ID,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            allowDangerousEmailAccountLinking: true
           })
         ]
       : [])
