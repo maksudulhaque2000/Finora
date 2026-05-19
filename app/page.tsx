@@ -62,9 +62,9 @@ export default function HomePage() {
   return (
     <main className="min-h-screen overflow-hidden text-white">
       <section className="relative isolate">
-        <div className="absolute inset-0 bg-mesh opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
-        <div className="mx-auto flex min-h-screen max-w-7xl flex-col justify-between gap-12 px-6 py-8 lg:px-10">
+        <div className="pointer-events-none absolute inset-0 bg-mesh opacity-80" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-between gap-12 px-6 py-8 lg:px-10">
           <header className="flex items-center justify-between gap-4 rounded-full border border-white/10 bg-white/5 px-5 py-3 backdrop-blur-xl">
             <div>
               <p className="font-display text-2xl tracking-wide text-gold">Finora</p>
