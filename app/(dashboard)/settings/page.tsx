@@ -2,6 +2,7 @@ import { Settings2, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
 import { SettingsForm } from '@/components/settings-form';
+import { DeleteAccountButton } from '@/components/delete-account-button';
 import { getWorkspace } from '@/lib/workspace';
 
 export default async function SettingsPage() {
@@ -40,10 +41,8 @@ export default async function SettingsPage() {
 
           <div className="glass-panel rounded-[28px] p-6">
             <h3 className="text-lg font-semibold text-white">Danger zone</h3>
-            <p className="mt-2 text-sm text-white/60">Account deletion is intentionally disabled until a confirmed destructive flow is added.</p>
-            <Button variant="outline" disabled className="mt-5 border-crimson/30 bg-crimson/10 text-crimson opacity-70">
-              Delete account
-            </Button>
+            <p className="mt-2 text-sm text-white/60">This action permanently deletes your account and signs you out.</p>
+            <DeleteAccountButton />
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Bell, ChevronDown, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,13 +50,9 @@ export function Topbar() {
               {session.user.name ?? session.user.email}
             </div>
           ) : null}
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
+          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
             {organizationName}
-            <ChevronDown className="h-4 w-4 text-white/45" />
           </div>
-          <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-            <Bell className="h-4 w-4" />
-          </Button>
           {session?.user ? (
             <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10" onClick={() => signOut({ callbackUrl: '/login' })}>
               Sign out
