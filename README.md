@@ -94,6 +94,7 @@ Note: API routes perform server-side workspace checks to ensure users only acces
 ## 🛠 Local Development — Setup & Run
 
 Prerequisites
+
 - Node.js 18+ (LTS recommended)
 - npm (or pnpm)
 - MongoDB (Atlas or local)
@@ -182,9 +183,9 @@ This project does not include an explicit license file. If you plan to publish o
 ---
 
 If you want I can:
+
 - Add screenshots and badges (GitHub Actions, Vercel, coverage)
 - Add `CONTRIBUTING.md`, `.env.example`, and `LICENSE`
 - Generate a short README summary for GitHub's repository description
 
 Tell me which additions you want and I will add them.
-
