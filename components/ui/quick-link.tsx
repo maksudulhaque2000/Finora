@@ -1,27 +1,13 @@
 "use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useLoading } from '@/components/loading';
+import Link from 'next/link';
+import type { AnchorHTMLAttributes, ReactNode } from 'react';
 
-export function QuickLink({ href, children, className, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
-  const router = useRouter();
-  const { setLoading } = useLoading();
-
-  async function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      await router.push(String(href));
-    } finally {
-      setLoading(false);
-    }
-  }
-
+export function QuickLink({ href, children, className, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children: ReactNode }) {
   return (
-    <a href={String(href)} onClick={handleClick} className={className} {...props}>
+    <Link href={href} className={className} {...props}>
       {children}
-    </a>
+    </Link>
   );
 }
 

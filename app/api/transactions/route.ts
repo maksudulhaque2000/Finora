@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url);
     const page = Math.max(Number(url.searchParams.get('page') ?? '1'), 1);
-    const pageSize = Math.min(Math.max(Number(url.searchParams.get('pageSize') ?? '25'), 1), 25);
+    const pageSize = Math.min(Math.max(Number(url.searchParams.get('pageSize') ?? '25'), 1), 500);
     const type = url.searchParams.get('type') || undefined;
     const categoryId = url.searchParams.get('categoryId') || undefined;
     const search = url.searchParams.get('search') || undefined;
