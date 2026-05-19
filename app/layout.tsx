@@ -10,7 +10,10 @@ const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
   title: 'Finora',
-  description: 'Finora is a premium financial management platform for income, assets, expenses, and reporting.'
+  description: 'Finora is a premium financial management platform for income, assets, expenses, and reporting.',
+  icons: {
+    icon: '/favicon.png'
+  }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
