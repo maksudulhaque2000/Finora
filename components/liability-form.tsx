@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/toast';
 
 export function LiabilityForm() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export function LiabilityForm() {
       description: ''
     }
   });
+  const { showToast } = useToast();
 
   const submit = form.handleSubmit((values) => {
     startTransition(async () => {
@@ -46,9 +48,11 @@ export function LiabilityForm() {
 
         router.push('/dashboard/liabilities');
         router.refresh();
+        showToast({ title: 'Saved', description: 'Liability saved successfully.', variant: 'success' });
       } catch (submitError) {
         const message = submitError instanceof Error ? submitError.message : 'Liability save failed.';
         setError(message);
+        showToast({ title: 'Error', description: message, variant: 'error' });
         // eslint-disable-next-line no-console
         console.error('Liability submit failed', submitError);
       }

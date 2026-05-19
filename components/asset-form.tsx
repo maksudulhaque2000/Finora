@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/toast';
 
 export function AssetForm() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export function AssetForm() {
       description: ''
     }
   });
+  const { showToast } = useToast();
 
   const submit = form.handleSubmit((values) => {
     startTransition(async () => {
@@ -43,9 +45,11 @@ export function AssetForm() {
 
         router.push('/dashboard/assets');
         router.refresh();
+        showToast({ title: 'Saved', description: 'Asset saved successfully.', variant: 'success' });
       } catch (submitError) {
         const message = submitError instanceof Error ? submitError.message : 'Asset save failed.';
         setError(message);
+        showToast({ title: 'Error', description: message, variant: 'error' });
         // eslint-disable-next-line no-console
         console.error('Asset submit failed', submitError);
       }

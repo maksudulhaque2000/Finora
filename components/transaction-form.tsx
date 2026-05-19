@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/toast';
 
 type TransactionFormValues = Omit<TransactionValues, 'date'> & {
   date: string;
@@ -44,6 +45,7 @@ export function TransactionForm({
       recurringRule: ''
     }
   });
+  const { showToast } = useToast();
 
   const submit = form.handleSubmit((values) => {
     startTransition(async () => {
@@ -79,9 +81,11 @@ export function TransactionForm({
           recurringRule: ''
         });
         router.refresh();
+        showToast({ title: 'Saved', description: 'Transaction saved successfully.', variant: 'success' });
       } catch (submitError) {
         const message = submitError instanceof Error ? submitError.message : 'Transaction save failed.';
         setError(message);
+        showToast({ title: 'Error', description: message, variant: 'error' });
         // eslint-disable-next-line no-console
         console.error('Transaction submit failed', submitError);
       }

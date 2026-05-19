@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/toast';
 
 export function DeleteAccountButton() {
   const [isPending, startTransition] = useTransition();
@@ -16,6 +17,7 @@ export function DeleteAccountButton() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -61,10 +63,12 @@ export function DeleteAccountButton() {
 
         setIsModalOpen(false);
         setConfirmationText('');
+          showToast({ title: 'Account deleted', description: 'Your account has been removed.', variant: 'success' });
         await signOut({ callbackUrl: '/login' });
       } catch (deleteError) {
         const message = deleteError instanceof Error ? deleteError.message : 'Failed to delete account.';
         setError(message);
+          showToast({ title: 'Error', description: message, variant: 'error' });
         // eslint-disable-next-line no-console
         console.error('Account deletion failed', deleteError);
       }

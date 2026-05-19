@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
+import { useToast } from '@/components/ui/toast';
 
 export function SettingsForm({
   initialValues,
@@ -21,6 +22,7 @@ export function SettingsForm({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
 
   const form = useForm<SettingsValues>({
     resolver: zodResolver(settingsSchema),
@@ -46,9 +48,11 @@ export function SettingsForm({
 
         setSuccess('Settings saved successfully.');
         router.refresh();
+        showToast({ title: 'Saved', description: 'Settings saved successfully.', variant: 'success' });
       } catch (submitError) {
         const message = submitError instanceof Error ? submitError.message : 'Settings save failed.';
         setError(message);
+        showToast({ title: 'Error', description: message, variant: 'error' });
         // eslint-disable-next-line no-console
         console.error('Settings submit failed', submitError);
       }
