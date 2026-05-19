@@ -38,7 +38,7 @@ export function TransactionTable({
             Refresh
           </Button>
           <Button asChild className="bg-gold text-black hover:bg-gold-light">
-            <Link href="/reports">Export</Link>
+            <Link href="/dashboard/reports">Export</Link>
           </Button>
         </div>
       </div>

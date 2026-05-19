@@ -21,6 +21,14 @@ export const organizationSchema = z.object({
   description: z.string().trim().max(500).optional().or(z.literal(''))
 });
 
+export const settingsSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  email: z.string().trim().email(),
+  organizationName: z.string().trim().min(2).max(120),
+  currency: z.string().trim().min(3).max(5),
+  description: z.string().trim().max(500).optional().or(z.literal(''))
+});
+
 export const categorySchema = z.object({
   name: z.string().trim().min(2).max(80),
   type: z.enum(['INCOME', 'EXPENSE']),
@@ -73,6 +81,7 @@ export const loginSchema = authSchema;
 export type AuthValues = z.infer<typeof authSchema>;
 export type RegisterValues = z.infer<typeof registerSchema>;
 export type OrganizationValues = z.infer<typeof organizationSchema>;
+export type SettingsValues = z.infer<typeof settingsSchema>;
 export type CategoryValues = z.infer<typeof categorySchema>;
 export type TransactionValues = z.infer<typeof transactionSchema>;
 export type AssetValues = z.infer<typeof assetSchema>;

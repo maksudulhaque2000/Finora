@@ -1,6 +1,8 @@
 'use client';
 
-import { useTransition } from 'react';
+import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { transactionSchema, type TransactionValues } from '@/lib/validators';
@@ -10,6 +12,10 @@ import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
+type TransactionFormValues = Omit<TransactionValues, 'date'> & {
+  date: string;
+};
+
 export function TransactionForm({
   type = 'INCOME',
   onSubmit,
@@ -18,11 +24,13 @@ export function TransactionForm({
 }: {
   type?: 'INCOME' | 'EXPENSE' | 'TRANSFER';
   categories: Array<{ id: string; name: string }>;
-  onSubmit?: (values: TransactionValues) => Promise<void> | void;
+  onSubmit?: (values: TransactionFormValues) => Promise<void> | void;
   onCancel?: () => void;
 }) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const form = useForm<TransactionValues>({
+  const [error, setError] = useState<string | null>(null);
+  const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       type,
@@ -30,6 +38,7 @@ export function TransactionForm({
       description: '',
       note: '',
       categoryId: categories[0]?.id ?? '',
+      date: format(new Date(), 'yyyy-MM-dd'),
       paymentMethod: '',
       isRecurring: false,
       recurringRule: ''
@@ -38,23 +47,44 @@ export function TransactionForm({
 
   const submit = form.handleSubmit((values) => {
     startTransition(async () => {
-      if (onSubmit) {
-        await onSubmit(values);
-      } else {
-        try {
-          await fetch('/api/transactions', {
+      setError(null);
+
+      try {
+        if (onSubmit) {
+          await onSubmit(values);
+        } else {
+          const response = await fetch('/api/transactions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values)
           });
-        } catch (e) {
-          // keep console logging for local debugging
-          // eslint-disable-next-line no-console
-          console.error('Transaction submit failed', e);
-        }
-      }
 
-      form.reset();
+          const payload = (await response.json().catch(() => null)) as { error?: string; issues?: Array<{ message: string }> } | null;
+
+          if (!response.ok) {
+            const message = payload?.error ?? payload?.issues?.[0]?.message ?? 'Transaction save failed.';
+            throw new Error(message);
+          }
+        }
+
+        form.reset({
+          type,
+          amount: 0,
+          description: '',
+          note: '',
+          categoryId: categories[0]?.id ?? '',
+          date: format(new Date(), 'yyyy-MM-dd'),
+          paymentMethod: '',
+          isRecurring: false,
+          recurringRule: ''
+        });
+        router.refresh();
+      } catch (submitError) {
+        const message = submitError instanceof Error ? submitError.message : 'Transaction save failed.';
+        setError(message);
+        // eslint-disable-next-line no-console
+        console.error('Transaction submit failed', submitError);
+      }
     });
   });
 
@@ -86,7 +116,7 @@ export function TransactionForm({
         </div>
         <div>
           <Label htmlFor="date">Date</Label>
-          <Input id="date" type="date" {...form.register('date', { valueAsDate: true })} />
+          <Input id="date" type="date" {...form.register('date')} />
         </div>
         <div>
           <Label htmlFor="receiptUrl">Receipt URL</Label>
@@ -97,6 +127,7 @@ export function TransactionForm({
         <Label htmlFor="note">Notes</Label>
         <Textarea id="note" {...form.register('note')} />
       </div>
+      {error ? <p className="mt-4 rounded-2xl border border-crimson/30 bg-crimson/10 px-4 py-3 text-sm text-crimson">{error}</p> : null}
       <div className="mt-6 flex flex-wrap gap-3">
         <Button type="submit" disabled={isPending} className="bg-gold text-black hover:bg-gold-light">
           Save transaction

@@ -5,6 +5,7 @@ import QuickLink from '@/components/ui/quick-link';
 import { ArrowRight, ShieldCheck, Sparkles, LineChart, WalletCards } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FinancialCard } from '@/components/financial-card';
 
@@ -18,6 +19,45 @@ const highlights = [
 export default function HomePage() {
   const { data: session } = useSession();
   const isLoggedIn = Boolean(session?.user);
+  const [snapshot, setSnapshot] = useState<{ income: number; expenses: number; balance: number } | null>(null);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setSnapshot(null);
+      return;
+    }
+
+    let active = true;
+
+    (async () => {
+      try {
+        const response = await fetch('/api/reports/summary');
+        const payload = (await response.json().catch(() => null)) as { data?: { income?: number; expenses?: number; balance?: number }; error?: string } | null;
+
+        if (!response.ok) {
+          throw new Error(payload?.error ?? 'Failed to load financial snapshot.');
+        }
+
+        if (active) {
+          setSnapshot({
+            income: Number(payload?.data?.income ?? 0),
+            expenses: Number(payload?.data?.expenses ?? 0),
+            balance: Number(payload?.data?.balance ?? 0)
+          });
+        }
+      } catch (error) {
+        if (active) {
+          setSnapshot(null);
+        }
+        // Keep the landing page usable even if the snapshot cannot be loaded.
+        console.error('Homepage snapshot load failed', error);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [isLoggedIn]);
 
   return (
     <main className="min-h-screen overflow-hidden text-white">
@@ -79,7 +119,7 @@ export default function HomePage() {
                   </QuickLink>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
-                  <Link href="/reports">Explore reports</Link>
+                  <Link href="/dashboard/reports">Explore reports</Link>
                 </Button>
               </div>
             </motion.div>
@@ -92,14 +132,14 @@ export default function HomePage() {
             >
               <FinancialCard
                 title="Net balance"
-                amount={128540}
-                trend="+18.4%"
-                trendLabel="vs last month"
+                amount={snapshot?.balance ?? 0}
+                trend={isLoggedIn && snapshot ? 'Live' : undefined}
+                trendLabel={isLoggedIn ? 'vs last month' : 'Sign in to load live data'}
                 tone="positive"
               />
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <FinancialCard title="Income" amount={198540} tone="positive" compact />
-                <FinancialCard title="Expense" amount={69980} tone="negative" compact />
+                <FinancialCard title="Income" amount={snapshot?.income ?? 0} tone="positive" compact />
+                <FinancialCard title="Expense" amount={snapshot?.expenses ?? 0} tone="negative" compact />
               </div>
             </motion.div>
           </div>

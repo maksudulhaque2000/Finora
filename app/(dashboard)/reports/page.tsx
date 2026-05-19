@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useTransition } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
@@ -11,17 +14,48 @@ const reportCards = [
 ];
 
 export default function ReportsPage() {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function exportPdf() {
+    startTransition(async () => {
+      setError(null);
+
+      try {
+        const response = await fetch('/api/reports/export-pdf', { method: 'POST' });
+        if (!response.ok) {
+          const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+          throw new Error(payload?.error ?? 'PDF export failed.');
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'finora-report.pdf';
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      } catch (exportError) {
+        const message = exportError instanceof Error ? exportError.message : 'PDF export failed.';
+        setError(message);
+        // eslint-disable-next-line no-console
+        console.error('PDF export failed', exportError);
+      }
+    });
+  }
+
   return (
     <PageShell
       title="Reports"
       description="Generate finance reports with running balance, category breakdowns, and professional PDF export flows."
       actions={
-        <Button className="bg-gold text-black hover:bg-gold-light">
+        <Button className="bg-gold text-black hover:bg-gold-light" onClick={exportPdf} disabled={isPending}>
           <Download className="h-4 w-4" />
-          Export PDF
+          {isPending ? 'Exporting...' : 'Export PDF'}
         </Button>
       }
     >
+      {error ? <p className="rounded-2xl border border-crimson/30 bg-crimson/10 px-4 py-3 text-sm text-crimson">{error}</p> : null}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {reportCards.map((report) => (
           <div key={report.title} className="glass-panel rounded-[24px] p-5">
