@@ -44,6 +44,40 @@ export async function POST(request: NextRequest) {
 
     autoTable(doc, {
       startY: (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 200,
+      head: [['Date', 'Asset', 'Type', 'Value', 'Details']],
+      body: report.assets.length > 0
+        ? report.assets.map((asset) => [
+            formatLongDate(asset.purchaseDate ?? asset.createdAt),
+            asset.name,
+            asset.type,
+            Number(asset.value).toFixed(2),
+            asset.description ?? 'Recorded asset'
+          ])
+        : [['-', 'No assets recorded', '-', '-', '-']],
+      styles: { fontSize: 8, cellPadding: 6 },
+      headStyles: { fillColor: [22, 27, 34], textColor: 255 },
+      margin: { top: 20 }
+    });
+
+    autoTable(doc, {
+      startY: (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 200,
+      head: [['Date', 'Liability', 'Type', 'Balance', 'Details']],
+      body: report.liabilities.length > 0
+        ? report.liabilities.map((liability) => [
+            formatLongDate(liability.dueDate ?? liability.createdAt),
+            liability.name,
+            liability.type,
+            Number(liability.balance).toFixed(2),
+            liability.description ?? 'Recorded liability'
+          ])
+        : [['-', 'No liabilities recorded', '-', '-', '-']],
+      styles: { fontSize: 8, cellPadding: 6 },
+      headStyles: { fillColor: [22, 27, 34], textColor: 255 },
+      margin: { top: 20 }
+    });
+
+    autoTable(doc, {
+      startY: (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 200,
       head: [['Date', 'Description', 'Category', 'Debit', 'Credit', 'Balance']],
       body: report.ledger.map((entry) => [
         formatLongDate(entry.date),

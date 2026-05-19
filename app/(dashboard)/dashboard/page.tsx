@@ -161,12 +161,9 @@ export default function DashboardPage() {
     return (data?.transactions ?? []).filter((transaction) => isSameMonth(new Date(transaction.date), now));
   }, [data]);
 
-  const currentIncome = currentMonthTransactions
-    .filter((transaction) => transaction.type === 'INCOME')
-    .reduce((total, transaction) => total + transaction.amount, 0);
-  const currentExpenses = currentMonthTransactions
-    .filter((transaction) => transaction.type === 'EXPENSE')
-    .reduce((total, transaction) => total + transaction.amount, 0);
+  const income = data?.summary.income ?? 0;
+  const expenses = data?.summary.expenses ?? 0;
+  const balance = data?.summary.balance ?? 0;
   const assetValue = data?.balanceSheet.assets ?? 0;
 
   const topExpenseCategory = useMemo(() => {
@@ -211,13 +208,13 @@ export default function DashboardPage() {
       {error ? <p className="rounded-2xl border border-crimson/30 bg-crimson/10 px-4 py-3 text-sm text-crimson">{error}</p> : null}
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-          <FinancialCard title="Total income" amount={currentIncome} trend={data ? 'Live' : undefined} trendLabel="Current month" tone="positive" />
+          <FinancialCard title="Total income" amount={income} trend={data ? 'Live' : undefined} trendLabel="All time" tone="positive" />
         </motion.div>
         <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <FinancialCard title="Total expenses" amount={currentExpenses} trend={data ? 'Live' : undefined} trendLabel="Current month" tone="negative" />
+          <FinancialCard title="Total expenses" amount={expenses} trend={data ? 'Live' : undefined} trendLabel="All time" tone="negative" />
         </motion.div>
         <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
-          <FinancialCard title="Net balance" amount={currentIncome - currentExpenses} trend={data ? 'Live' : undefined} trendLabel="Current month" tone="positive" />
+          <FinancialCard title="Net balance" amount={balance} trend={data ? 'Live' : undefined} trendLabel="All time" tone="positive" />
         </motion.div>
         <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <FinancialCard title="Asset value" amount={assetValue} trend={data ? 'Live' : undefined} trendLabel="Latest snapshot" tone="neutral" />
