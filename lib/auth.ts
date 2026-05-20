@@ -6,6 +6,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { compare } from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { authSchema } from '@/lib/validators';
+import { authSecret } from '@/lib/auth-secret';
 
 const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -14,7 +15,7 @@ const authConfig: NextAuthConfig = {
     signIn: '/login'
   },
   trustHost: true,
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   providers: [
     Credentials({
       name: 'Credentials',

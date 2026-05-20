@@ -119,6 +119,14 @@ GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 ```
 
+Environment guidance
+
+- For local development, keep `NEXTAUTH_URL=http://localhost:3000`.
+- For Vercel production, set `NEXTAUTH_URL` to your live domain exactly.
+- Set `AUTH_SECRET` and `NEXTAUTH_SECRET` to the same value in both local and production environments.
+- If you enable Google or Facebook login, add the provider credentials in Vercel as well.
+- `AUTH_URL` and `NEXT_PUBLIC_APP_URL` are optional configuration helpers used to keep URLs consistent across environments.
+
 Run dev server
 
 ```bash
