@@ -96,7 +96,7 @@ export default function LoginPage() {
                     className="w-full justify-center"
                     onClick={async () => {
                       try {
-                        await signIn(provider.id, { callbackUrl: '/dashboard' });
+                        await signIn(provider.id, { redirectTo: '/dashboard' });
                       } catch (err) {
                         console.error('Social sign-in failed', err);
                         setError('Social sign-in failed. Please try again.');

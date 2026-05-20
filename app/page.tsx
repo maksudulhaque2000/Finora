@@ -77,7 +77,7 @@ export default function HomePage() {
                   <Button asChild className="bg-gold text-black hover:bg-gold-light">
                     <QuickLink href="/dashboard">Go to dashboard</QuickLink>
                   </Button>
-                  <Button variant="outline" onClick={() => signOut({ callbackUrl: '/login' })}>
+                  <Button variant="outline" onClick={() => signOut({ redirectTo: '/login' })}>
                     Sign out
                   </Button>
                 </>
