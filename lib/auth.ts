@@ -16,7 +16,13 @@ const authConfig: NextAuthConfig = {
       name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
       options: (() => {
         const isProd = process.env.NODE_ENV === 'production';
-        const opts: Record<string, any> = {
+        const opts: {
+          httpOnly: boolean;
+          sameSite: 'lax' | 'none';
+          path: string;
+          secure: boolean;
+          domain?: string;
+        } = {
           httpOnly: true,
           sameSite: isProd ? 'none' : 'lax',
           path: '/',
@@ -30,7 +36,7 @@ const authConfig: NextAuthConfig = {
               opts.domain = url.hostname;
             }
           }
-        } catch (e) {
+        } catch {
           // ignore
         }
 
