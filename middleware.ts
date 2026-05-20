@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { sessionCookieName } from '@/lib/auth-cookies';
 import { authSecret } from '@/lib/auth-secret';
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request, secret: authSecret });
+  const token = await getToken({ req: request, secret: authSecret, cookieName: sessionCookieName });
 
   if (token) {
     return NextResponse.next();

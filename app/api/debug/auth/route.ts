@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { sessionCookieName } from '@/lib/auth-cookies';
 import { authSecret } from '@/lib/auth-secret';
 
 export async function GET(request: Request) {
@@ -8,7 +9,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const token = await getToken({ req: request as unknown as Request, secret: authSecret });
+    const token = await getToken({ req: request as unknown as Request, secret: authSecret, cookieName: sessionCookieName });
     // Collect cookie keys and headers to help debugging
     const cookieHeader = request.headers.get('cookie') ?? '';
     const cookies = cookieHeader.split(';').map((c) => c.trim()).filter(Boolean);

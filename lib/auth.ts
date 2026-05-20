@@ -7,13 +7,14 @@ import { compare } from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { authSchema } from '@/lib/validators';
 import { authSecret } from '@/lib/auth-secret';
+import { sessionCookieName } from '@/lib/auth-cookies';
 
 const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
+      name: sessionCookieName,
       options: (() => {
         const isProd = process.env.NODE_ENV === 'production';
         const opts: {
