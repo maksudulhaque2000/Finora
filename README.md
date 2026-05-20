@@ -1,4 +1,10 @@
+<div align="center">
+
 # Finora — Personal Finance & Reporting 💼📊
+
+  <img src="./public/preview.png" height="400" width="800" alt="Haque's Portfolio Cover"/>
+</div>
+
 
 Finora is a modern, responsive personal finance application built for individuals, freelancers, and small teams who need a polished, privacy-aware tool to track income, expenses, assets, liabilities, and generate accounting-style reports.
 
