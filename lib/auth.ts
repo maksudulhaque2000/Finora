@@ -14,12 +14,28 @@ const authConfig: NextAuthConfig = {
   cookies: {
     sessionToken: {
       name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
+      options: (() => {
+        const isProd = process.env.NODE_ENV === 'production';
+        const opts: Record<string, any> = {
+          httpOnly: true,
+          sameSite: isProd ? 'none' : 'lax',
+          path: '/',
+          secure: isProd
+        };
+
+        try {
+          if (isProd && process.env.NEXTAUTH_URL) {
+            const url = new URL(process.env.NEXTAUTH_URL);
+            if (!/localhost|:\d+$/.test(url.hostname)) {
+              opts.domain = url.hostname;
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+
+        return opts;
+      })()
     }
   },
   pages: {
