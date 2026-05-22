@@ -105,8 +105,8 @@ Users can manage account and organization settings, and the app includes deletio
 ### Client Side
 
 - [app/page.tsx](app/page.tsx) — landing page
-- [app/(dashboard)/dashboard/page.tsx](app/(dashboard)/dashboard/page.tsx) — dashboard overview and charts
-- [app/(dashboard)/reports/page.tsx](app/(dashboard)/reports/page.tsx) — report controls and PDF export entry point
+- [app/(dashboard)/dashboard/page.tsx](<app/(dashboard)/dashboard/page.tsx>) — dashboard overview and charts
+- [app/(dashboard)/reports/page.tsx](<app/(dashboard)/reports/page.tsx>) — report controls and PDF export entry point
 - [components/layout/topbar.tsx](components/layout/topbar.tsx) — search, route actions, and quick navigation
 - [components/providers.tsx](components/providers.tsx) — session, theme, loading, toast, and quick navigation providers
 
@@ -327,4 +327,3 @@ This project does not currently declare a license. If you plan to publish or dis
 - Live demo: https://finora-woad.vercel.app
 - Repository: https://github.com/maksudulhaque2000/Finora
 - Author / Portfolio: https://maksudul-haque.vercel.app
-
