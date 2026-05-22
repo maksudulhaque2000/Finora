@@ -9,8 +9,6 @@ import { authSchema } from '@/lib/validators';
 import { authSecret } from '@/lib/auth-secret';
 import { sessionCookieName } from '@/lib/auth-cookies';
 
-console.log('Prisma client delegates:', Object.keys(prisma));
-console.log('Has account delegate?', Boolean((prisma as any).account));
 const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
