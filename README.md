@@ -5,7 +5,6 @@
   <img src="./public/preview.png" height="400" width="800" alt="Haque's Portfolio Cover"/>
 </div>
 
-
 Finora is a modern, responsive personal finance application built for individuals, freelancers, and small teams who need a polished, privacy-aware tool to track income, expenses, assets, liabilities, and generate accounting-style reports.
 
 Live demo: https://finora-woad.vercel.app
@@ -129,9 +128,11 @@ Environment guidance
 
 - For local development, keep `NEXTAUTH_URL=http://localhost:3000`.
 - For Vercel production, set `NEXTAUTH_URL` to your live domain exactly.
+- If you prefer a single canonical app URL, set `AUTH_URL` and `NEXT_PUBLIC_APP_URL` to the same live domain in Vercel.
 - Set `AUTH_SECRET` and `NEXTAUTH_SECRET` to the same value in both local and production environments.
 - If you enable Google or Facebook login, add the provider credentials in Vercel as well.
 - `AUTH_URL` and `NEXT_PUBLIC_APP_URL` are optional configuration helpers used to keep URLs consistent across environments.
+- For Facebook login, add your live domain to the Meta app's `App Domains` and `Valid OAuth Redirect URIs`, for example `https://finora-woad.vercel.app` and `https://finora-woad.vercel.app/api/auth/callback/facebook`.
 
 Run dev server
 

@@ -8,6 +8,7 @@ import { prisma } from '@/lib/prisma';
 import { authSchema } from '@/lib/validators';
 import { authSecret } from '@/lib/auth-secret';
 import { sessionCookieName } from '@/lib/auth-cookies';
+import { getAppHostname } from '@/lib/app-url';
 
 const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -31,10 +32,10 @@ const authConfig: NextAuthConfig = {
         };
 
         try {
-          if (isProd && process.env.NEXTAUTH_URL) {
-            const url = new URL(process.env.NEXTAUTH_URL);
-            if (!/localhost|:\d+$/.test(url.hostname)) {
-              opts.domain = url.hostname;
+          if (isProd) {
+            const hostname = getAppHostname();
+            if (hostname && !/localhost|:\d+$/.test(hostname)) {
+              opts.domain = hostname;
             }
           }
         } catch {
