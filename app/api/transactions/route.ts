@@ -27,28 +27,31 @@ export async function GET(request: NextRequest) {
     const from = url.searchParams.get('from');
     const to = url.searchParams.get('to');
 
+    const where = {
+      organizationId: organization.id,
+      ...(type ? { type: type as 'INCOME' | 'EXPENSE' | 'TRANSFER' } : {}),
+      ...(categoryId ? { categoryId } : {}),
+      ...(search
+        ? {
+            OR: [
+              { description: { contains: search, mode: 'insensitive' as const } },
+              { note: { contains: search, mode: 'insensitive' as const } },
+              { category: { name: { contains: search, mode: 'insensitive' as const } } }
+            ]
+          }
+        : {}),
+      ...(from || to
+        ? {
+            date: {
+              ...(from ? { gte: new Date(from) } : {}),
+              ...(to ? { lte: new Date(to) } : {})
+            }
+          }
+        : {})
+    };
+
     const transactions = await prisma.transaction.findMany({
-      where: {
-        organizationId: organization.id,
-        ...(type ? { type: type as 'INCOME' | 'EXPENSE' | 'TRANSFER' } : {}),
-        ...(categoryId ? { categoryId } : {}),
-        ...(search
-          ? {
-              OR: [
-                { description: { contains: search, mode: 'insensitive' } },
-                { note: { contains: search, mode: 'insensitive' } }
-              ]
-            }
-          : {}),
-        ...(from || to
-          ? {
-              date: {
-                ...(from ? { gte: new Date(from) } : {}),
-                ...(to ? { lte: new Date(to) } : {})
-              }
-            }
-          : {})
-      },
+      where,
       include: { category: true, createdBy: true },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -56,7 +59,7 @@ export async function GET(request: NextRequest) {
     });
 
     const total = await prisma.transaction.count({
-      where: { organizationId: organization.id }
+      where
     });
 
     return successResponse(transactions, 200, { page, pageSize, total });

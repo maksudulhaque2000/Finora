@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { format, isSameMonth, subMonths } from 'date-fns';
@@ -44,6 +45,8 @@ type DashboardState = {
 };
 
 export default function DashboardPage() {
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get('search')?.trim() ?? '';
   const [data, setData] = useState<DashboardState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,10 +59,17 @@ export default function DashboardPage() {
       setError(null);
 
       try {
+        const transactionUrl = new URL('/api/transactions', window.location.origin);
+        transactionUrl.searchParams.set('pageSize', '500');
+
+        if (searchTerm) {
+          transactionUrl.searchParams.set('search', searchTerm);
+        }
+
         const [summaryResponse, balanceSheetResponse, transactionsResponse] = await Promise.all([
           fetch('/api/reports/summary'),
           fetch('/api/reports/balance-sheet'),
-          fetch('/api/transactions?pageSize=500')
+          fetch(transactionUrl.toString())
         ]);
 
         const [summaryPayload, balanceSheetPayload, transactionsPayload] = await Promise.all([
@@ -120,7 +130,7 @@ export default function DashboardPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [searchTerm]);
 
   const chartAnchorDate = useMemo(() => {
     const dates = (data?.transactions ?? []).map((transaction) => new Date(transaction.date).getTime()).filter((date) => !Number.isNaN(date));
@@ -270,6 +280,11 @@ export default function DashboardPage() {
       }
     >
       {error ? <p className="rounded-2xl border border-crimson/30 bg-crimson/10 px-4 py-3 text-sm text-crimson">{error}</p> : null}
+      {searchTerm ? (
+        <div className="rounded-2xl border border-gold/20 bg-gold/10 px-4 py-3 text-sm text-gold-light">
+          Showing transaction results for “{searchTerm}”.
+        </div>
+      ) : null}
 
       {!data ? (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">

@@ -9,8 +9,8 @@ export default function QuickNavigator() {
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      if (!detail) return;
-      router.push(String(detail));
+      if (typeof detail !== 'string' || !detail.startsWith('/')) return;
+      router.push(detail);
     };
 
     window.addEventListener('quick:navigate', handler as EventListener);

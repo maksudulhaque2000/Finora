@@ -8,16 +8,44 @@ import { CategoryBadge } from '@/components/category-badge';
 import { prisma } from '@/lib/prisma';
 import { getWorkspace } from '@/lib/workspace';
 
-export default async function CategoriesPage() {
+export default async function CategoriesPage({ searchParams }: { searchParams?: { search?: string | string[] } }) {
   const { organization } = await getWorkspace();
+  const searchTerm = typeof searchParams?.search === 'string' ? searchParams.search.trim() : '';
+  const matchesSearch = Boolean(searchTerm);
+
+  const categoryWhere = matchesSearch
+    ? {
+        OR: [
+          { name: { contains: searchTerm, mode: 'insensitive' as const } },
+          { icon: { contains: searchTerm, mode: 'insensitive' as const } }
+        ]
+      }
+    : {};
 
   const [categories, transactions] = await Promise.all([
     prisma.category.findMany({
-      where: { organizationId: organization.id },
+      where: {
+        organizationId: organization.id,
+        ...categoryWhere
+      },
       orderBy: { createdAt: 'desc' }
     }),
     prisma.transaction.findMany({
-      where: { organizationId: organization.id },
+      where: {
+        organizationId: organization.id,
+        ...(matchesSearch
+          ? {
+              category: {
+                is: {
+                  OR: [
+                    { name: { contains: searchTerm, mode: 'insensitive' as const } },
+                    { icon: { contains: searchTerm, mode: 'insensitive' as const } }
+                  ]
+                }
+              }
+            }
+          : {})
+      },
       include: { category: true },
       orderBy: { date: 'desc' }
     })
@@ -42,6 +70,11 @@ export default async function CategoriesPage() {
         </Button>
       }
     >
+      {searchTerm ? (
+        <div className="rounded-2xl border border-gold/20 bg-gold/10 px-4 py-3 text-sm text-gold-light">
+          Showing category matches for “{searchTerm}”.
+        </div>
+      ) : null}
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="glass-panel rounded-[28px] p-6">
           <h3 className="text-lg font-semibold text-white">Category registry</h3>
@@ -60,7 +93,7 @@ export default async function CategoriesPage() {
               ))
             ) : (
               <div className="rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-10 text-center text-sm text-white/55">
-                No categories have been created yet.
+                {searchTerm ? 'No categories matched the current search.' : 'No categories have been created yet.'}
               </div>
             )}
           </div>
