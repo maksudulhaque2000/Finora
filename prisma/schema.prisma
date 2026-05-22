@@ -59,6 +59,7 @@ model User {
   assets        Asset[]             @relation("CreatedAssets")
   liabilities   Liability[]         @relation("CreatedLiabilities")
   sessions      Session[]
+  accounts      Account[]
 }
 
 model Organization {
@@ -166,6 +167,27 @@ model Session {
   userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
+}
+
+model Account {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
 }
 
 model VerificationToken {
