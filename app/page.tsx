@@ -96,7 +96,7 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
 
         <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-10 lg:py-5">
-          <header className="flex items-center justify-between gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xl">
+          <header className="flex items-center justify-between gap-3 rounded-[16px] border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-xl">
             <div className="min-w-0">
               <p className="font-display text-xl tracking-wide text-gold sm:text-2xl">Finora</p>
               <p className="text-xs text-white/60 sm:text-sm">Finance + Aura</p>

@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import TitleManager from '@/components/title-manager';
 
 type SearchTarget = {
   label: string;
@@ -151,6 +152,7 @@ export function Topbar() {
 
   return (
     <div className="sticky top-0 z-40 border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
+      <TitleManager />
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div ref={searchPanelRef} className="relative lg:flex-1 lg:max-w-2xl">
           <form onSubmit={handleSubmit} className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-white/70 transition focus-within:border-gold/40 focus-within:bg-white/8">
