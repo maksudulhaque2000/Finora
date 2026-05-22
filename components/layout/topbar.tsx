@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
@@ -81,6 +82,7 @@ export function Topbar() {
       return haystack.includes(normalizedQuery) || target.keywords.some((keyword) => keyword.includes(normalizedQuery));
     });
   }, [query]);
+  const router = useRouter();
 
   function navigateTo(href: string) {
     window.dispatchEvent(new CustomEvent('quick:navigate', { detail: href }));
@@ -185,6 +187,11 @@ export function Topbar() {
                         type="button"
                         className="flex w-full items-start justify-between gap-4 rounded-2xl px-4 py-3 text-left text-white/85 transition hover:bg-white/8"
                         onMouseDown={(event) => event.preventDefault()}
+                        onMouseEnter={() => {
+                          try {
+                            router.prefetch(href);
+                          } catch {}
+                        }}
                         onClick={() => navigateTo(href)}
                       >
                         <span className="min-w-0">

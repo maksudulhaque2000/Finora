@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { Plus, ShieldAlert } from 'lucide-react';
+import dynamic from 'next/dynamic';
+const Plus = dynamic(() => import('lucide-react').then((m) => m.Plus), { ssr: false });
+const ShieldAlert = dynamic(() => import('lucide-react').then((m) => m.ShieldAlert), { ssr: false });
 import { PageShell } from '@/components/page-shell';
 import AmountDynamic from '@/components/amount-dynamic';
 import { Button } from '@/components/ui/button';
@@ -78,7 +80,7 @@ export default async function LiabilitiesPage() {
         <EmptyState
           title="Risk visibility"
           description="Keep liabilities, dues, and repayment plans visible beside your asset position so balance pressure is never hidden."
-          iconName="ShieldAlert"
+          icon={<ShieldAlert className="h-6 w-6" />}
           actionLabel="Create liability"
           actionHref="/dashboard/liabilities/new"
         />

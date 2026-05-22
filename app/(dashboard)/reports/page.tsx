@@ -3,9 +3,19 @@
 import { useMemo, useState, useTransition } from 'react';
 import { endOfMonth, endOfYear, format, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
 import { CalendarRange, Download, FileText } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
-import { PDFPreview } from '@/components/pdf-preview';
+const PDFPreview = dynamic(() => import('@/components/pdf-preview').then((mod) => mod.PDFPreview), {
+  ssr: false,
+  loading: () => (
+    <div className="glass-panel rounded-[28px] p-6">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-6 text-white/65">
+        <div className="mt-4 h-80 rounded-2xl bg-gradient-to-b from-white/8 to-white/3" />
+      </div>
+    </div>
+  )
+});
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 

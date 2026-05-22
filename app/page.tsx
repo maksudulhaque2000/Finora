@@ -2,8 +2,13 @@
 
 import Link from 'next/link';
 import QuickLink from '@/components/ui/quick-link';
-import { ArrowRight, ShieldCheck, Sparkles, LineChart, WalletCards } from 'lucide-react';
-import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+const ArrowRight = dynamic(() => import('lucide-react').then((m) => m.ArrowRight), { ssr: false });
+const ShieldCheck = dynamic(() => import('lucide-react').then((m) => m.ShieldCheck), { ssr: false });
+const Sparkles = dynamic(() => import('lucide-react').then((m) => m.Sparkles), { ssr: false });
+const LineChart = dynamic(() => import('lucide-react').then((m) => m.LineChart), { ssr: false });
+const WalletCards = dynamic(() => import('lucide-react').then((m) => m.WalletCards), { ssr: false });
+// removed framer-motion to reduce client bundle size
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -126,12 +131,7 @@ export default function HomePage() {
           </header>
 
           <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[1.04fr_0.96fr] lg:gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="flex min-h-0 flex-col gap-4"
-            >
+            <div className="flex min-h-0 flex-col gap-4">
               <div className="glass-panel rounded-[28px] p-5 xl:p-6">
                 <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-xs text-gold-light sm:text-sm">
                   <Sparkles className="h-4 w-4" />
@@ -170,14 +170,9 @@ export default function HomePage() {
               </div>
 
               {/* Assets & Liabilities small preview cards removed per user request */}
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.08 }}
-              className="glass-panel flex min-h-0 flex-col rounded-[28px] p-4 xl:p-5"
-            >
+            <div className="glass-panel flex min-h-0 flex-col rounded-[28px] p-4 xl:p-5">
               <FinancialCard
                 title="Net balance"
                 amount={overview?.summary.balance ?? 0}
@@ -222,7 +217,7 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

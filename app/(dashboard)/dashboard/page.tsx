@@ -1,33 +1,19 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+// framer-motion removed to trim initial JS
 import { format, isSameMonth, subMonths } from 'date-fns';
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Line,
-  LineChart
-} from 'recharts';
 import { Button } from '@/components/ui/button';
 import { FinancialCard } from '@/components/financial-card';
-import { ChartContainer } from '@/components/chart-container';
+
 import { TransactionTable } from '@/components/transaction-table';
 import { PageShell } from '@/components/page-shell';
 import { EmptyState } from '@/components/empty-state';
 import { PageSkeleton } from '@/components/page-skeleton';
-import { Sparkles } from 'lucide-react';
+import dynamic from 'next/dynamic';
+const Sparkles = dynamic(() => import('lucide-react').then((m) => m.Sparkles), { ssr: false });
 
 type DashboardTransaction = {
   id: string;
@@ -261,6 +247,16 @@ export default function DashboardPage() {
     return <PageSkeleton />;
   }
 
+  const DashboardCharts = dynamic(() => import('@/components/dashboard-charts'), {
+    ssr: false,
+    loading: () => (
+      <div className="space-y-4">
+        <div className="h-72 w-full rounded-lg bg-gradient-to-b from-white/8 to-white/3" />
+        <div className="h-72 w-full rounded-lg bg-gradient-to-b from-white/8 to-white/3" />
+      </div>
+    )
+  });
+
   return (
     <PageShell
       title="Dashboard"
@@ -293,18 +289,18 @@ export default function DashboardPage() {
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-            <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+            <div className="min-w-0">
               <FinancialCard title="Total income" amount={income} trend={data ? 'Live' : undefined} trendLabel="All time" tone="positive" />
-            </motion.div>
-            <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            </div>
+            <div className="min-w-0">
               <FinancialCard title="Total expenses" amount={expenses} trend={data ? 'Live' : undefined} trendLabel="All time" tone="negative" />
-            </motion.div>
-            <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+            </div>
+            <div className="min-w-0">
               <FinancialCard title="Net balance" amount={balance} trend={data ? 'Live' : undefined} trendLabel="All time" tone="positive" />
-            </motion.div>
-            <motion.div className="min-w-0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            </div>
+            <div className="min-w-0">
               <FinancialCard title="Asset value" amount={assetValue} trend={data ? 'Live' : undefined} trendLabel="Latest snapshot" tone="neutral" />
-            </motion.div>
+            </div>
           </div>
 
           {(data?.transactions ?? []).length === 0 ? (
@@ -313,85 +309,14 @@ export default function DashboardPage() {
             </div>
           ) : (
             <>
-              <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
-                <ChartContainer title="Monthly income vs expenses">
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={monthlyData}>
-                        <XAxis dataKey="month" stroke="rgba(255,255,255,0.35)" />
-                        <YAxis stroke="rgba(255,255,255,0.35)" />
-                        <Tooltip contentStyle={{ background: 'rgba(10, 14, 24, 0.95)', border: '1px solid rgba(255,255,255,0.08)' }} />
-                        <Bar dataKey="income" fill="#d4a853" radius={[12, 12, 0, 0]} />
-                        <Bar dataKey="expense" fill="#e74c3c" radius={[12, 12, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </ChartContainer>
-
-                {expenseBreakdown.length > 0 ? (
-                  <ChartContainer title="Expense breakdown">
-                    <div className="h-80">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie data={expenseBreakdown} dataKey="value" nameKey="name" innerRadius={70} outerRadius={110} paddingAngle={4}>
-                            {expenseBreakdown.map((entry) => (
-                              <Cell key={entry.name} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip
-                            contentStyle={{
-                              background: 'rgba(10, 14, 24, 0.95)',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              color: 'rgba(255,255,255,0.92)'
-                            }}
-                            labelStyle={{ color: 'rgba(255,255,255,0.92)' }}
-                            itemStyle={{ color: 'rgba(255,255,255,0.86)' }}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </ChartContainer>
-                ) : (
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-                    <p className="text-white/60">No expense data to display</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <ChartContainer title="Balance trend">
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={monthlyData}>
-                        <XAxis dataKey="month" stroke="rgba(255,255,255,0.35)" />
-                        <YAxis stroke="rgba(255,255,255,0.35)" />
-                        <Tooltip contentStyle={{ background: 'rgba(10, 14, 24, 0.95)', border: '1px solid rgba(255,255,255,0.08)' }} />
-                        <Area type="monotone" dataKey="balance" stroke="#58a6ff" fill="rgba(88,166,255,0.20)" strokeWidth={2} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </ChartContainer>
-
-                <ChartContainer title="Savings movement">
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={monthlyData}>
-                        <XAxis dataKey="month" stroke="rgba(255,255,255,0.35)" />
-                        <YAxis stroke="rgba(255,255,255,0.35)" />
-                        <Tooltip contentStyle={{ background: 'rgba(10, 14, 24, 0.95)', border: '1px solid rgba(255,255,255,0.08)' }} />
-                        <Line type="monotone" dataKey="balance" stroke="#2ecc71" strokeWidth={3} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </ChartContainer>
-              </div>
+              <DashboardCharts monthlyData={monthlyData} expenseBreakdown={expenseBreakdown} />
 
               <div className="grid gap-4 xl:grid-cols-[1.3fr_0.7fr]">
                 <TransactionTable title="Recent transactions" rows={recentTransactions} />
                 <EmptyState
                   title="Quick insights"
                   description={`Largest expense this month: ${largestRecentExpense}. Top spending category: ${topExpenseCategory}. Total transactions: ${data.transactions.length}.`}
-                  iconName="Sparkles"
+                  icon={<Sparkles className="h-6 w-6" />}
                 />
               </div>
             </>

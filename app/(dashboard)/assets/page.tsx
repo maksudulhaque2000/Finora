@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import dynamic from 'next/dynamic';
+const Plus = dynamic(() => import('lucide-react').then((m) => m.Plus), { ssr: false });
+const Building2 = dynamic(() => import('lucide-react').then((m) => m.Building2), { ssr: false });
 import AmountDynamic from '@/components/amount-dynamic';
 import { PageShell } from '@/components/page-shell';
 import { Button } from '@/components/ui/button';
@@ -68,7 +70,7 @@ export default async function AssetsPage() {
         <EmptyState
           title="Asset strategy"
           description="Capture ownership details, purchase dates, and depreciation notes to preserve financial context across reporting cycles."
-          iconName="Building2"
+          icon={<Building2 className="h-6 w-6" />}
           actionLabel="Add asset"
           actionHref="/dashboard/assets/new"
         />
