@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} overflow-x-hidden`}>
         <Providers>
           <OfflineBanner />
           {children}

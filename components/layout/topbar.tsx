@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import TitleManager from '@/components/title-manager';
+import { useUiStore } from '@/store/ui';
 
 type SearchTarget = {
   label: string;
@@ -69,6 +70,7 @@ export function Topbar() {
   const [query, setQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchPanelRef = useRef<HTMLDivElement | null>(null);
+  const { toggleMobileSidebar } = useUiStore();
 
   const suggestions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -156,58 +158,63 @@ export function Topbar() {
     <div className="sticky top-0 z-40 border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
       <TitleManager />
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div ref={searchPanelRef} className="relative lg:flex-1 lg:max-w-2xl">
-          <form onSubmit={handleSubmit} className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-white/70 transition focus-within:border-gold/40 focus-within:bg-white/8">
-            <Search className="h-4 w-4 shrink-0 text-white/35" />
-            <Input
-              className="h-auto border-0 bg-transparent px-0 text-sm ring-0 focus:ring-0"
-              placeholder="Search transactions, reports, categories..."
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onFocus={() => setIsSearchOpen(true)}
-              onKeyDown={(event) => {
-                if (event.key === 'Escape') {
-                  setIsSearchOpen(false);
-                }
-              }}
-            />
-          </form>
+        <div className="flex w-full items-center gap-3">
+          <Button variant="ghost" onClick={toggleMobileSidebar} className="h-11 w-11 shrink-0 rounded-full border border-white/10 bg-white/5 text-white lg:hidden" aria-label="Open navigation">
+            <Menu className="h-5 w-5" />
+          </Button>
+          <div ref={searchPanelRef} className="relative min-w-0 flex-1 lg:max-w-2xl">
+            <form onSubmit={handleSubmit} className="flex w-full items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-white/70 transition focus-within:border-gold/40 focus-within:bg-white/8">
+              <Search className="h-4 w-4 shrink-0 text-white/35" />
+              <Input
+                className="h-auto min-w-0 flex-1 border-0 bg-transparent px-0 text-sm ring-0 focus:ring-0"
+                placeholder="Search transactions, reports, categories..."
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                onFocus={() => setIsSearchOpen(true)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') {
+                    setIsSearchOpen(false);
+                  }
+                }}
+              />
+            </form>
 
-          {isSearchOpen ? (
-            <div className="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-50 overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1220]/95 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-              <div className="border-b border-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white/45">Quick search</div>
-              <div className="max-h-80 overflow-y-auto p-2">
-                {suggestions.length > 0 ? (
-                  suggestions.map((target) => {
-                    const href = buildSearchHref(target, query.trim() || target.label);
+            {isSearchOpen ? (
+              <div className="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-50 overflow-hidden rounded-[24px] border border-white/10 bg-[#0b1220]/95 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+                <div className="border-b border-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white/45">Quick search</div>
+                <div className="max-h-80 overflow-y-auto p-2">
+                  {suggestions.length > 0 ? (
+                    suggestions.map((target) => {
+                      const href = buildSearchHref(target, query.trim() || target.label);
 
-                    return (
-                      <button
-                        key={target.label}
-                        type="button"
-                        className="flex w-full items-start justify-between gap-4 rounded-2xl px-4 py-3 text-left text-white/85 transition hover:bg-white/8"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onMouseEnter={() => {
-                          try {
-                            router.prefetch(href);
-                          } catch {}
-                        }}
-                        onClick={() => navigateTo(href)}
-                      >
-                        <span className="min-w-0">
-                          <span className="block font-medium text-white">{target.label}</span>
-                          <span className="mt-1 block text-sm leading-5 text-white/52">{target.description}</span>
-                        </span>
-                        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white/45">Open</span>
-                      </button>
-                    );
-                  })
-                ) : (
-                  <div className="px-4 py-10 text-center text-sm text-white/52">No direct match. Press Enter to search transactions.</div>
-                )}
+                      return (
+                        <button
+                          key={target.label}
+                          type="button"
+                          className="flex w-full items-start justify-between gap-4 rounded-2xl px-4 py-3 text-left text-white/85 transition hover:bg-white/8"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onMouseEnter={() => {
+                            try {
+                              router.prefetch(href);
+                            } catch {}
+                          }}
+                          onClick={() => navigateTo(href)}
+                        >
+                          <span className="min-w-0">
+                            <span className="block font-medium text-white">{target.label}</span>
+                            <span className="mt-1 block text-sm leading-5 text-white/52">{target.description}</span>
+                          </span>
+                          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white/45">Open</span>
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="px-4 py-10 text-center text-sm text-white/52">No direct match. Press Enter to search transactions.</div>
+                  )}
+                </div>
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {session?.user ? (

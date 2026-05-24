@@ -1,6 +1,6 @@
 export function PageSkeleton() {
   return (
-    <main className="min-h-screen px-6 py-10">
+    <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="glass-panel rounded-[28px] p-6">
           <div className="h-4 w-32 rounded-full skeleton-shimmer animate-shimmer" />

@@ -64,10 +64,10 @@ export default function LoginPage() {
 
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
-      <section className="flex items-center justify-center px-6 py-12">
-        <div className="glass-panel w-full max-w-md rounded-[30px] p-8">
+      <section className="flex items-center justify-center px-4 py-8 sm:px-6 sm:py-12">
+        <div className="glass-panel w-full max-w-md rounded-[30px] p-6 sm:p-8">
           <p className="text-sm uppercase tracking-[0.25em] text-gold-light">Welcome back</p>
-          <h1 className="mt-4 font-display text-4xl text-white">Sign in to Finora</h1>
+          <h1 className="mt-4 font-display text-3xl text-white sm:text-4xl">Sign in to Finora</h1>
           <p className="mt-3 text-sm text-white/60">Securely continue your financial workspace with a fast, professional experience.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
